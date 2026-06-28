@@ -240,6 +240,110 @@ body::after {
     }
 }
 
+/* 3D Banner Styles */
+.banner-3d-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    perspective: 1000px;
+    z-index: 1;
+}
+
+.banner-3d {
+    width: 300px;
+    height: 300px;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+.cube {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    animation: rotate-cube 20s infinite linear;
+}
+
+@keyframes rotate-cube {
+    0% {
+        transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg);
+    }
+    100% {
+        transform: rotateX(360deg) rotateY(360deg) rotateZ(360deg);
+    }
+}
+
+.cube-face {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.15), rgba(157, 78, 221, 0.15));
+    border: 3px solid var(--accent-cyan);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2.5rem;
+    font-weight: 900;
+    color: var(--accent-cyan);
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.8);
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.4), inset 0 0 30px rgba(0, 212, 255, 0.1);
+    backdrop-filter: blur(10px);
+    letter-spacing: 2px;
+}
+
+.cube-face.front {
+    transform: translateZ(150px);
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(157, 78, 221, 0.1));
+    border-color: var(--accent-cyan);
+}
+
+.cube-face.back {
+    transform: rotateY(180deg) translateZ(150px);
+    background: linear-gradient(135deg, rgba(255, 0, 110, 0.2), rgba(0, 212, 255, 0.1));
+    border-color: var(--accent-pink);
+    color: var(--accent-pink);
+    text-shadow: 0 0 20px rgba(255, 0, 110, 0.8);
+}
+
+.cube-face.right {
+    transform: rotateY(90deg) translateZ(150px);
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.2), rgba(0, 212, 255, 0.1));
+    border-color: var(--accent-purple);
+    color: var(--accent-purple);
+    text-shadow: 0 0 20px rgba(157, 78, 221, 0.8);
+}
+
+.cube-face.left {
+    transform: rotateY(-90deg) translateZ(150px);
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(255, 0, 110, 0.1));
+    border-color: var(--accent-cyan);
+}
+
+.cube-face.top {
+    transform: rotateX(90deg) translateZ(150px);
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.2), rgba(255, 0, 110, 0.1));
+    border-color: var(--accent-purple);
+    color: var(--accent-purple);
+    text-shadow: 0 0 20px rgba(157, 78, 221, 0.8);
+    font-size: 2rem;
+}
+
+.cube-face.bottom {
+    transform: rotateX(-90deg) translateZ(150px);
+    background: linear-gradient(135deg, rgba(255, 0, 110, 0.2), rgba(157, 78, 221, 0.1));
+    border-color: var(--accent-pink);
+    color: var(--accent-pink);
+    text-shadow: 0 0 20px rgba(255, 0, 110, 0.8);
+    font-size: 2rem;
+}
+
 .hero .container {
     position: relative;
     z-index: 5;

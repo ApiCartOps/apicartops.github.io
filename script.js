@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initStatCounters();
     initMouseEffects();
     initMemoryGame();
+    init3DBanner();
 });
 
 // ==================== GAMES ====================
@@ -569,6 +570,59 @@ function isMatched(index) {
         return false;
     }
     return true;
+}
+
+// ==================== 3D BANNER ====================
+
+function init3DBanner() {
+    const cube = document.querySelector('.cube');
+    const banner3d = document.querySelector('.banner-3d');
+
+    if (!cube) return;
+
+    let mouseX = 0;
+    let mouseY = 0;
+    let targetRotationX = 0;
+    let targetRotationY = 0;
+    let currentRotationX = 0;
+    let currentRotationY = 0;
+
+    document.addEventListener('mousemove', (e) => {
+        const x = e.clientX / window.innerWidth;
+        const y = e.clientY / window.innerHeight;
+
+        targetRotationY = (x - 0.5) * 30;
+        targetRotationX = (y - 0.5) * -30;
+    });
+
+    // Add touch support for mobile
+    document.addEventListener('touchmove', (e) => {
+        if (e.touches.length > 0) {
+            const x = e.touches[0].clientX / window.innerWidth;
+            const y = e.touches[0].clientY / window.innerHeight;
+
+            targetRotationY = (x - 0.5) * 30;
+            targetRotationX = (y - 0.5) * -30;
+        }
+    });
+
+    // Smooth animation loop
+    function animate() {
+        currentRotationX += (targetRotationX - currentRotationX) * 0.1;
+        currentRotationY += (targetRotationY - currentRotationY) * 0.1;
+
+        cube.style.transform = `rotateX(${currentRotationX}deg) rotateY(${currentRotationY}deg)`;
+
+        requestAnimationFrame(animate);
+    }
+
+    animate();
+
+    // Reset rotation when mouse leaves
+    document.addEventListener('mouseleave', () => {
+        targetRotationX = 0;
+        targetRotationY = 0;
+    });
 }
 
 // Smooth scrolling
