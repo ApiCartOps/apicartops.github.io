@@ -54,11 +54,12 @@ let gameAnimationId = null;
 const spaceShooterConfig = {
     canvas: null,
     ctx: null,
-    player: { x: 0, y: 0, width: 30, height: 40, speed: 5 },
+    player: { x: 0, y: 0, width: 40, height: 50, speed: 5 },
     bullets: [],
     enemies: [],
     score: 0,
-    level: 1
+    level: 1,
+    explosions: []
 };
 
 function startSpaceShooter() {
@@ -134,7 +135,7 @@ function updateSpaceShooter() {
     const ctx = spaceShooterConfig.ctx;
 
     // Clear canvas
-    ctx.fillStyle = 'rgba(10, 14, 39, 0.1)';
+    ctx.fillStyle = 'rgba(10, 14, 39, 0.05)';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
 
     // Update player
@@ -145,11 +146,8 @@ function updateSpaceShooter() {
         spaceShooterConfig.player.x += spaceShooterConfig.player.speed;
     }
 
-    // Draw player
-    ctx.fillStyle = '#00d4ff';
-    ctx.fillRect(spaceShooterConfig.player.x, spaceShooterConfig.player.y, spaceShooterConfig.player.width, spaceShooterConfig.player.height);
-    ctx.shadowColor = 'rgba(0, 212, 255, 0.8)';
-    ctx.shadowBlur = 10;
+    // Draw enhanced player spaceship
+    drawSpaceship(ctx, spaceShooterConfig.player.x + 15, spaceShooterConfig.player.y + 40, 15);
 
     // Update and draw bullets
     for (let i = spaceShooterConfig.bullets.length - 1; i >= 0; i--) {
@@ -161,8 +159,28 @@ function updateSpaceShooter() {
             continue;
         }
 
+        // Enhanced bullet with glow
         ctx.fillStyle = '#ff006e';
+        ctx.shadowColor = 'rgba(255, 0, 110, 0.8)';
+        ctx.shadowBlur = 10;
         ctx.fillRect(bullet.x, bullet.y, bullet.width, bullet.height);
+
+        // Bullet trail glow
+        ctx.fillStyle = 'rgba(255, 0, 110, 0.6)';
+        ctx.beginPath();
+        ctx.arc(bullet.x + bullet.width / 2, bullet.y + bullet.height, 3, 0, Math.PI * 2);
+        ctx.fill();
+    }
+
+    // Update and draw explosions
+    for (let i = spaceShooterConfig.explosions.length - 1; i >= 0; i--) {
+        const explosion = spaceShooterConfig.explosions[i];
+        drawExplosion(ctx, explosion);
+        explosion.life--;
+
+        if (explosion.life <= 0) {
+            spaceShooterConfig.explosions.splice(i, 1);
+        }
     }
 
     // Update and draw enemies
@@ -170,14 +188,24 @@ function updateSpaceShooter() {
         const enemy = spaceShooterConfig.enemies[i];
         enemy.y += enemy.speed;
 
-        ctx.fillStyle = '#9d4edd';
-        ctx.fillRect(enemy.x, enemy.y, enemy.width, enemy.height);
+        // Draw enhanced enemy asteroid/alien
+        drawEnemy(ctx, enemy.x + 15, enemy.y + 15, 10);
 
         // Check collision with bullets
         for (let j = spaceShooterConfig.bullets.length - 1; j >= 0; j--) {
             const bullet = spaceShooterConfig.bullets[j];
             if (checkCollision(bullet, enemy)) {
                 spaceShooterConfig.bullets.splice(j, 1);
+
+                // Create explosion effect
+                spaceShooterConfig.explosions.push({
+                    x: enemy.x + 15,
+                    y: enemy.y + 15,
+                    life: 30,
+                    maxLife: 30,
+                    particles: generateExplosionParticles(enemy.x + 15, enemy.y + 15)
+                });
+
                 spaceShooterConfig.enemies.splice(i, 1);
                 spaceShooterConfig.score += 10;
                 document.getElementById('score').textContent = spaceShooterConfig.score;
@@ -209,6 +237,235 @@ function checkCollision(rect1, rect2) {
            rect1.x + rect1.width > rect2.x &&
            rect1.y < rect2.y + rect2.height &&
            rect1.y + rect1.height > rect2.y;
+}
+
+// Generate explosion particles
+function generateExplosionParticles(x, y) {
+    const particles = [];
+    for (let i = 0; i < 8; i++) {
+        const angle = (i / 8) * Math.PI * 2;
+        particles.push({
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * 4,
+            vy: Math.sin(angle) * 4,
+            life: 30,
+            maxLife: 30,
+            size: Math.random() * 3 + 2
+        });
+    }
+    return particles;
+}
+
+// Draw explosion effect
+function drawExplosion(ctx, explosion) {
+    const progress = 1 - (explosion.life / explosion.maxLife);
+    const alpha = 1 - progress;
+
+    ctx.globalAlpha = alpha;
+    ctx.fillStyle = '#ff006e';
+    ctx.shadowColor = 'rgba(255, 0, 110, 0.8)';
+    ctx.shadowBlur = 20;
+
+    // Draw explosion ring
+    ctx.beginPath();
+    ctx.arc(explosion.x, explosion.y, 15 + progress * 30, 0, Math.PI * 2);
+    ctx.stroke();
+
+    // Draw particles
+    for (let particle of explosion.particles) {
+        particle.x += particle.vx;
+        particle.y += particle.vy;
+
+        ctx.fillStyle = '#ff006e';
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Yellow inner glow
+        ctx.fillStyle = '#ffff00';
+        ctx.globalAlpha = alpha * 0.7;
+        ctx.beginPath();
+        ctx.arc(particle.x, particle.y, particle.size * 0.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalAlpha = alpha;
+    }
+
+    ctx.globalAlpha = 1;
+    ctx.shadowBlur = 0;
+}
+
+// Draw enemy asteroid/alien
+function drawEnemy(ctx, x, y, size) {
+    const time = Date.now() / 100;
+    const rotation = time * 2;
+
+    // Enemy glow
+    ctx.shadowColor = 'rgba(157, 78, 221, 0.8)';
+    ctx.shadowBlur = 15;
+    ctx.fillStyle = 'rgba(157, 78, 221, 0.3)';
+    ctx.beginPath();
+    ctx.arc(x, y, size * 1.8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Rotating enemy body with spikes
+    ctx.save();
+    ctx.translate(x, y);
+    ctx.rotate(rotation);
+
+    // Main body
+    ctx.fillStyle = '#9d4edd';
+    ctx.strokeStyle = '#ff006e';
+    ctx.lineWidth = 2;
+
+    // Draw irregular asteroid shape
+    ctx.beginPath();
+    for (let i = 0; i < 6; i++) {
+        const angle = (i / 6) * Math.PI * 2;
+        const radius = size * (0.8 + 0.3 * Math.sin(time + i));
+        const px = Math.cos(angle) * radius;
+        const py = Math.sin(angle) * radius;
+        if (i === 0) {
+            ctx.moveTo(px, py);
+        } else {
+            ctx.lineTo(px, py);
+        }
+    }
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Energy core in center
+    ctx.fillStyle = '#ff006e';
+    ctx.beginPath();
+    ctx.arc(0, 0, size * 0.3, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Core glow
+    ctx.fillStyle = 'rgba(255, 0, 110, 0.6)';
+    ctx.beginPath();
+    ctx.arc(0, 0, size * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore();
+
+    // Reset shadow
+    ctx.shadowBlur = 0;
+}
+
+// Enhanced spaceship drawing function
+function drawSpaceship(ctx, x, y, size) {
+    const time = Date.now() / 100;
+
+    // Outer glow
+    ctx.shadowColor = 'rgba(0, 212, 255, 0.8)';
+    ctx.shadowBlur = 30;
+    ctx.fillStyle = 'rgba(0, 212, 255, 0.2)';
+    ctx.beginPath();
+    ctx.arc(x, y - 5, size * 2.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Inner glow
+    ctx.shadowColor = 'rgba(0, 212, 255, 0.6)';
+    ctx.shadowBlur = 20;
+    ctx.fillStyle = 'rgba(0, 212, 255, 0.4)';
+    ctx.beginPath();
+    ctx.arc(x, y - 5, size * 1.8, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Main body (center)
+    ctx.fillStyle = '#00d4ff';
+    ctx.strokeStyle = '#00f5ff';
+    ctx.lineWidth = 2;
+
+    // Draw main fuselage (triangle pointing up)
+    ctx.beginPath();
+    ctx.moveTo(x, y - size * 1.8);  // Top point
+    ctx.lineTo(x - size * 0.9, y + size * 0.5);  // Bottom left
+    ctx.lineTo(x - size * 0.4, y + size * 0.3);  // Inner left
+    ctx.lineTo(x, y + size * 0.8);  // Bottom center
+    ctx.lineTo(x + size * 0.4, y + size * 0.3);  // Inner right
+    ctx.lineTo(x + size * 0.9, y + size * 0.5);  // Bottom right
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Cockpit window
+    ctx.fillStyle = '#00f5ff';
+    ctx.beginPath();
+    ctx.arc(x, y - size * 0.5, size * 0.4, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Cockpit inner glow
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+    ctx.beginPath();
+    ctx.arc(x, y - size * 0.5, size * 0.2, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Left wing accent
+    ctx.fillStyle = '#9d4edd';
+    ctx.strokeStyle = '#ff006e';
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(x - size * 0.9, y + size * 0.3);
+    ctx.lineTo(x - size * 1.3, y + size * 0.1);
+    ctx.lineTo(x - size * 0.95, y + size * 0.6);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Right wing accent
+    ctx.beginPath();
+    ctx.moveTo(x + size * 0.9, y + size * 0.3);
+    ctx.lineTo(x + size * 1.3, y + size * 0.1);
+    ctx.lineTo(x + size * 0.95, y + size * 0.6);
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+
+    // Engine nozzles (left)
+    ctx.fillStyle = '#ff006e';
+    ctx.beginPath();
+    ctx.rect(x - size * 0.6, y + size * 0.6, size * 0.35, size * 0.8);
+    ctx.fill();
+
+    // Engine nozzles (right)
+    ctx.beginPath();
+    ctx.rect(x + size * 0.25, y + size * 0.6, size * 0.35, size * 0.8);
+    ctx.fill();
+
+    // Engine glow (left)
+    ctx.fillStyle = 'rgba(255, 0, 110, 0.6)';
+    ctx.beginPath();
+    ctx.arc(x - size * 0.425, y + size * 1.5, size * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Engine glow (right)
+    ctx.beginPath();
+    ctx.arc(x + size * 0.425, y + size * 1.5, size * 0.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Animated engine flame (left)
+    const flameTip1 = size * 0.5 + Math.sin(time * 3) * size * 0.3;
+    ctx.fillStyle = 'rgba(255, 200, 0, 0.8)';
+    ctx.beginPath();
+    ctx.moveTo(x - size * 0.425, y + size * 1.5);
+    ctx.lineTo(x - size * 0.65, y + size * 1.5 + flameTip1);
+    ctx.lineTo(x - size * 0.2, y + size * 1.5 + flameTip1);
+    ctx.closePath();
+    ctx.fill();
+
+    // Animated engine flame (right)
+    const flameTip2 = size * 0.5 + Math.sin(time * 3 + 1) * size * 0.3;
+    ctx.beginPath();
+    ctx.moveTo(x + size * 0.425, y + size * 1.5);
+    ctx.lineTo(x + size * 0.65, y + size * 1.5 + flameTip2);
+    ctx.lineTo(x + size * 0.2, y + size * 1.5 + flameTip2);
+    ctx.closePath();
+    ctx.fill();
+
+    // Reset shadow
+    ctx.shadowBlur = 0;
 }
 
 // ==================== MEMORY MATCH GAME ====================
