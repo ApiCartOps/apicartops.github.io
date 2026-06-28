@@ -677,11 +677,18 @@ style.textContent = `
 `;
 document.head.appendChild(style);
 
-// Trigger big bang on page load
+// Trigger big bang on page load - on the banner
 document.addEventListener('DOMContentLoaded', () => {
-    setTimeout(() => {
-        triggerBigBang();
-    }, 800);
+    const hero = document.querySelector('.hero');
+    if (hero) {
+        const rect = hero.getBoundingClientRect();
+        const bannerX = window.innerWidth / 2;
+        const bannerY = rect.top + rect.height / 2;
+
+        setTimeout(() => {
+            triggerBigBang(bannerX, bannerY);
+        }, 800);
+    }
 });
 
 // ==================== 3D BANNER ====================
@@ -755,10 +762,12 @@ function initNavigation() {
     const sections = document.querySelectorAll('section, header');
     const navLinks = document.querySelectorAll('.nav-links a');
 
-    window.addEventListener('scroll', () => {
+    function updateActiveLink() {
         let current = '';
         sections.forEach(section => {
-            if (window.pageYOffset >= section.offsetTop - 300) {
+            const sectionTop = section.offsetTop;
+            const sectionHeight = section.offsetHeight;
+            if (window.pageYOffset >= sectionTop - 200 && window.pageYOffset < sectionTop + sectionHeight - 200) {
                 current = section.getAttribute('id');
             }
         });
@@ -769,7 +778,10 @@ function initNavigation() {
                 link.classList.add('active');
             }
         });
-    });
+    }
+
+    window.addEventListener('scroll', updateActiveLink);
+    updateActiveLink(); // Call on load
 }
 
 // Enhanced project card effects

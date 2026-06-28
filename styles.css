@@ -169,12 +169,13 @@ body::after {
     position: relative;
     letter-spacing: 1px;
     transition: all 0.3s ease;
+    padding-bottom: 8px;
 }
 
 .nav-links a::before {
     content: '';
     position: absolute;
-    bottom: -8px;
+    bottom: 0;
     left: 0;
     width: 0;
     height: 3px;
@@ -190,6 +191,15 @@ body::after {
 }
 
 .nav-links a:hover::before {
+    width: 100%;
+}
+
+.nav-links a.active {
+    color: var(--accent-cyan);
+    text-shadow: 0 0 15px var(--accent-cyan);
+}
+
+.nav-links a.active::before {
     width: 100%;
 }
 
