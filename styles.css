@@ -545,6 +545,257 @@ body::after {
 .projects-grid .project-card:nth-child(9) { animation-delay: 0.9s; }
 .projects-grid .project-card:nth-child(10) { animation-delay: 1s; }
 
+/* Games Section */
+.games {
+    padding: 8rem 20px;
+    position: relative;
+    background: linear-gradient(180deg, rgba(10, 14, 39, 0.8), rgba(22, 33, 62, 0.6));
+}
+
+.games::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--accent-pink), transparent);
+    box-shadow: 0 0 20px var(--accent-pink);
+}
+
+.games h2 {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    text-align: center;
+    font-weight: 900;
+    background: linear-gradient(90deg, var(--accent-pink), var(--accent-cyan));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: fade-in-up 0.8s ease-out;
+}
+
+.games-subtitle {
+    text-align: center;
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    margin-bottom: 4rem;
+    animation: fade-in-up 0.8s ease-out 0.2s backwards;
+}
+
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+}
+
+.game-card {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(157, 78, 221, 0.1));
+    border: 2px solid var(--accent-cyan);
+    border-radius: 20px;
+    padding: 3rem 2rem;
+    text-align: center;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    cursor: pointer;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 0 20px rgba(0, 212, 255, 0.2);
+    animation: slide-up 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+}
+
+.game-card:nth-child(1) { animation-delay: 0.2s; }
+.game-card:nth-child(2) { animation-delay: 0.4s; }
+
+.game-card:hover {
+    border-color: var(--accent-pink);
+    background: linear-gradient(135deg, rgba(255, 0, 110, 0.15), rgba(0, 212, 255, 0.15));
+    transform: translateY(-15px) scale(1.05);
+    box-shadow: 0 0 40px rgba(255, 0, 110, 0.4), 0 0 20px rgba(0, 212, 255, 0.3);
+}
+
+.game-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.game-card:hover .game-icon {
+    animation: bounce 0.6s ease-in-out;
+}
+
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+.game-card h3 {
+    font-size: 1.8rem;
+    color: var(--accent-cyan);
+    margin-bottom: 0.8rem;
+    text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+}
+
+.game-card p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.game-button {
+    background: linear-gradient(135deg, var(--accent-pink), var(--accent-cyan));
+    color: var(--primary);
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 25px;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px var(--accent-pink);
+    letter-spacing: 1px;
+}
+
+.game-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px var(--accent-pink), 0 0 15px var(--accent-cyan);
+}
+
+/* Game Modal */
+.game-modal {
+    display: none;
+    position: fixed;
+    z-index: 2000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(5px);
+    animation: fade-in 0.3s ease;
+}
+
+.game-modal-content {
+    background: linear-gradient(135deg, rgba(10, 14, 39, 0.95), rgba(22, 33, 62, 0.95));
+    margin: 5% auto;
+    padding: 3rem;
+    border: 2px solid var(--accent-cyan);
+    border-radius: 20px;
+    max-width: 900px;
+    box-shadow: 0 0 50px rgba(0, 212, 255, 0.4);
+    position: relative;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+
+.close-game {
+    position: absolute;
+    right: 2rem;
+    top: 1rem;
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: var(--accent-cyan);
+    background: none;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.close-game:hover {
+    color: var(--accent-pink);
+    text-shadow: 0 0 15px var(--accent-pink);
+    transform: scale(1.2);
+}
+
+.game-container {
+    text-align: center;
+}
+
+.game-container h2 {
+    color: var(--accent-cyan);
+    margin-bottom: 2rem;
+    font-size: 2.5rem;
+    text-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
+}
+
+#gameCanvas {
+    background: linear-gradient(135deg, rgba(10, 14, 39, 0.9), rgba(22, 33, 62, 0.9));
+    border: 2px solid var(--accent-cyan);
+    border-radius: 10px;
+    margin: 2rem 0;
+    max-width: 100%;
+    box-shadow: 0 0 30px rgba(0, 212, 255, 0.4);
+}
+
+.game-controls {
+    color: var(--text-secondary);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-top: 1rem;
+}
+
+#memoryBoard {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin: 2rem 0;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.memory-card {
+    width: 100px;
+    height: 100px;
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    border: 2px solid var(--accent-pink);
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 3rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 15px rgba(0, 212, 255, 0.4);
+    user-select: none;
+}
+
+.memory-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 25px rgba(0, 212, 255, 0.6);
+}
+
+.memory-card.flipped {
+    background: linear-gradient(135deg, rgba(0, 212, 255, 0.2), rgba(157, 78, 221, 0.2));
+    border-color: var(--accent-cyan);
+}
+
+.memory-card.matched {
+    opacity: 0.6;
+    cursor: default;
+}
+
+.reset-button {
+    background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+    color: var(--primary);
+    padding: 0.8rem 2rem;
+    border: none;
+    border-radius: 25px;
+    font-weight: 800;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 0 20px var(--accent-cyan);
+    margin-top: 1.5rem;
+}
+
+.reset-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 30px var(--accent-cyan), 0 0 15px var(--accent-purple);
+}
+
 /* About Section */
 .about {
     padding: 8rem 20px;

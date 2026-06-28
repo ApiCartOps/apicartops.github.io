@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ApiCartOps - Professional Portfolio</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230f172a' width='100' height='100'/><text x='50' y='60' font-size='60' font-weight='bold' text-anchor='middle' fill='%2300d4ff' font-family='Arial'>A</text><circle cx='50' cy='50' r='45' fill='none' stroke='%2300d4ff' stroke-width='2' opacity='0.5'/></svg>">
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -22,6 +23,7 @@
             <ul class="nav-links">
                 <li><a href="#home">Home</a></li>
                 <li><a href="#projects">Projects</a></li>
+                <li><a href="#games">Games</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#contact">Contact</a></li>
             </ul>
@@ -171,6 +173,46 @@
             </div>
         </div>
     </section>
+
+    <!-- Games Section -->
+    <section class="games" id="games">
+        <div class="container">
+            <h2>Play & Explore</h2>
+            <p class="games-subtitle">Take a break and play some games while you explore my portfolio</p>
+            <div class="games-grid">
+                <div class="game-card" onclick="startGame('spaceshooter')">
+                    <div class="game-icon">🚀</div>
+                    <h3>Space Shooter</h3>
+                    <p>Destroy asteroids and aliens! Use arrow keys to move and space to shoot.</p>
+                    <button class="game-button">Play Now</button>
+                </div>
+                <div class="game-card" onclick="startGame('memory')">
+                    <div class="game-icon">🧠</div>
+                    <h3>Memory Match</h3>
+                    <p>Test your memory! Match all the pairs in the least moves possible.</p>
+                    <button class="game-button">Play Now</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Game Modals -->
+    <div id="gameModal" class="game-modal">
+        <div class="game-modal-content">
+            <button class="close-game" onclick="closeGame()">&times;</button>
+            <div id="spaceShooterGame" class="game-container" style="display:none;">
+                <h2>Space Shooter</h2>
+                <canvas id="gameCanvas" width="800" height="500"></canvas>
+                <p class="game-controls">Arrow Keys: Move | Space: Shoot | Score: <span id="score">0</span></p>
+            </div>
+            <div id="memoryGame" class="game-container" style="display:none;">
+                <h2>Memory Match Game</h2>
+                <div id="memoryBoard"></div>
+                <p>Moves: <span id="moves">0</span> | Matched: <span id="matched">0</span>/8</p>
+                <button onclick="resetMemoryGame()" class="reset-button">New Game</button>
+            </div>
+        </div>
+    </div>
 
     <section class="about" id="about">
         <div class="container">
