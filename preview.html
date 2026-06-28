@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ApiCartOps Portfolio Preview</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1a3e 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            font-family: 'Arial', sans-serif;
+        }
+
+        canvas {
+            max-width: 100%;
+            height: auto;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="previewCanvas" width="1200" height="630"></canvas>
+
+    <script>
+        const canvas = document.getElementById('previewCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Background
+        const gradient = ctx.createLinearGradient(0, 0, 1200, 630);
+        gradient.addColorStop(0, '#0a0e27');
+        gradient.addColorStop(1, '#1a1a3e');
+        ctx.fillStyle = gradient;
+        ctx.fillRect(0, 0, 1200, 630);
+
+        // Animated background elements
+        ctx.fillStyle = 'rgba(0, 212, 255, 0.1)';
+        ctx.beginPath();
+        ctx.arc(150, 150, 200, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = 'rgba(157, 78, 221, 0.1)';
+        ctx.beginPath();
+        ctx.arc(1050, 500, 250, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Title
+        ctx.font = 'bold 80px Arial';
+        ctx.fillStyle = '#00d4ff';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.shadowColor = 'rgba(0, 212, 255, 0.8)';
+        ctx.shadowBlur = 30;
+        ctx.fillText('ApiCartOps', 600, 200);
+
+        // Subtitle
+        ctx.font = '40px Arial';
+        ctx.fillStyle = '#9d4edd';
+        ctx.shadowColor = 'rgba(157, 78, 221, 0.8)';
+        ctx.shadowBlur = 20;
+        ctx.fillText('Professional Portfolio', 600, 300);
+
+        // Features
+        ctx.font = '28px Arial';
+        ctx.fillStyle = '#00f5ff';
+        ctx.shadowColor = 'rgba(0, 245, 255, 0.6)';
+        ctx.shadowBlur = 15;
+        ctx.textAlign = 'left';
+
+        const features = [
+            '✨ 3D Interactive Banner',
+            '🎮 2 Playable Games',
+            '🚀 Improved Spaceship',
+            '💫 Neon Animations'
+        ];
+
+        features.forEach((feature, index) => {
+            ctx.fillText(feature, 150, 400 + index * 50);
+        });
+
+        // Bottom banner
+        ctx.fillStyle = 'rgba(0, 212, 255, 0.2)';
+        ctx.fillRect(0, 550, 1200, 80);
+
+        ctx.font = '32px Arial';
+        ctx.fillStyle = '#ff006e';
+        ctx.textAlign = 'center';
+        ctx.fillText('🌟 Explore an Amazing Portfolio Experience 🌟', 600, 590);
+    </script>
+</body>
+</html>

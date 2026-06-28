@@ -572,6 +572,118 @@ function isMatched(index) {
     return true;
 }
 
+// ==================== BIG BANG EFFECT ====================
+
+function triggerBigBang(x = window.innerWidth / 2, y = window.innerHeight / 2) {
+    const container = document.getElementById('bigBangContainer');
+    const particleCount = 100;
+    const colors = ['#00d4ff', '#9d4edd', '#ff006e', '#ffff00', '#00f5ff'];
+
+    // Create center burst
+    for (let i = 0; i < 20; i++) {
+        const particle = document.createElement('div');
+        particle.className = 'big-bang-particle';
+        particle.style.left = x + 'px';
+        particle.style.top = y + 'px';
+
+        const angle = (i / 20) * Math.PI * 2;
+        const distance = 200 + Math.random() * 300;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+
+        particle.style.setProperty('--tx', tx + 'px');
+        particle.style.setProperty('--ty', ty + 'px');
+
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        particle.style.background = color;
+        particle.style.boxShadow = `0 0 20px ${color}, 0 0 40px ${color}`;
+        particle.style.animation = `bigbang-explode ${1.5 + Math.random() * 1}s ease-out forwards`;
+
+        container.appendChild(particle);
+
+        setTimeout(() => particle.remove(), 2500);
+    }
+
+    // Create flash ring
+    for (let i = 0; i < 15; i++) {
+        const ring = document.createElement('div');
+        ring.className = 'big-bang-particle';
+        ring.style.left = x + 'px';
+        ring.style.top = y + 'px';
+        ring.style.width = '30px';
+        ring.style.height = '30px';
+        ring.style.border = '3px solid var(--accent-cyan)';
+        ring.style.background = 'none';
+        ring.style.boxShadow = `0 0 30px rgba(0, 212, 255, 0.8)`;
+        ring.style.animation = `bigbang-burst ${0.8 + i * 0.1}s ease-out forwards`;
+
+        container.appendChild(ring);
+
+        setTimeout(() => ring.remove(), 1500);
+    }
+
+    // Create colored spark waves
+    for (let i = 0; i < particleCount; i++) {
+        const spark = document.createElement('div');
+        spark.className = 'big-bang-particle';
+        spark.style.left = x + 'px';
+        spark.style.top = y + 'px';
+
+        const angle = Math.random() * Math.PI * 2;
+        const distance = 150 + Math.random() * 400;
+        const speed = 1 + Math.random() * 2;
+        const tx = Math.cos(angle) * distance;
+        const ty = Math.sin(angle) * distance;
+
+        spark.style.setProperty('--tx', tx + 'px');
+        spark.style.setProperty('--ty', ty + 'px');
+
+        const size = Math.random() * 8 + 3;
+        spark.style.width = size + 'px';
+        spark.style.height = size + 'px';
+
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        spark.style.background = color;
+        spark.style.boxShadow = `0 0 ${size * 2}px ${color}`;
+        spark.style.animation = `bigbang-explode ${speed}s ease-out forwards`;
+
+        container.appendChild(spark);
+
+        setTimeout(() => spark.remove(), speed * 1000 + 500);
+    }
+
+    // Shake effect
+    document.body.style.animation = 'shake 0.5s';
+    setTimeout(() => {
+        document.body.style.animation = '';
+    }, 500);
+}
+
+// Add shake animation
+const style = document.createElement('style');
+style.textContent = `
+    @keyframes shake {
+        0%, 100% { transform: translate(0, 0); }
+        10% { transform: translate(-5px, -5px); }
+        20% { transform: translate(5px, 5px); }
+        30% { transform: translate(-5px, 5px); }
+        40% { transform: translate(5px, -5px); }
+        50% { transform: translate(-3px, -3px); }
+        60% { transform: translate(3px, 3px); }
+        70% { transform: translate(-2px, 2px); }
+        80% { transform: translate(2px, -2px); }
+        90% { transform: translate(-1px, 1px); }
+    }
+`;
+document.head.appendChild(style);
+
+// Trigger big bang on page load
+document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+        triggerBigBang();
+    }, 800);
+});
+
 // ==================== 3D BANNER ====================
 
 function init3DBanner() {
